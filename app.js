@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express();
+require('./config/MongoDBConnection')
 const productRouter = require('./router/ProductRouter')
 
 app.use('/product',productRouter)
