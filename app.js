@@ -16,6 +16,8 @@ app.use(require('cookie-parser')());
 app.use(session({ secret: 'cats', resave: false, saveUninitialized: true }));
 app.use(passport.initialize());
 app.use(passport.session());
+app.set('view engine','ejs')
+app.set('views','./views')
 
 function isLoggedIn(req,res,next){
     req.headers['cookie'] ? next(): res.sendStatus(401)

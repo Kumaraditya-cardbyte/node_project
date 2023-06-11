@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Response</title>
+</head>
+<body>
+<script>
+    const updateProduct = () =>{
+        console.log("update is invoked.")
+        const id = document.getElementById('id1')
+        console.log("id "+id)
+        const name = document.getElementById('name1')
+        const companyName = document.getElementById('companyName1')
+        console.log("name "+name)
+        console.log("companyName "+companyName)
+        fetch(`/product/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                name: name,
+                companyName: companyName
+            })
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert('Product Updated successfully');
+                    // Optionally, redirect the user to another page or perform further actions
+                } else {
+                    alert('Failed to update the resource');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+</script>
+
+<ul>
+    <p> Update product</p>
+    <div>
+        <label for="id">Product Id:</label>
+        <input type="text" id="id1" name="id" required>
+        <label for="name">Product Name:</label>
+        <input type="text" id="name1" name="name" required>
+        <label for="companyName">Product Company Name:</label>
+        <input type="text" id="companyName1" name="companyName" required>
+    </div>
+
+    <button type="submit" onclick="updateProduct()">Update Product</button>
+</ul>
+</body>
+</html>

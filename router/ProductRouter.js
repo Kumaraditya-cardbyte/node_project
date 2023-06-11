@@ -3,7 +3,8 @@ const router = express.Router();
 const {
     deleteProduct
     , getProduct, getAllProduct, updateProduct,
-    createProduct
+    createProduct,
+    deletePage, updatePage
 } = require('../service/productService')
 
 router.get('/', (req, res) => {
@@ -20,6 +21,13 @@ router.put('/:id', (req, res) => {
 })
 router.delete('/:id', (req, res) => {
     deleteProduct(req, res)
+})
+
+router.get('/page/delete',(req,res) =>{
+deletePage(req,res)
+})
+router.get('/page/update',(req,res) =>{
+    updatePage(req,res)
 })
 
 module.exports = router;

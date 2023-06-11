@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Response</title>
+</head>
+<body>
+<script>
+    const deleteProduct = () =>{
+        console.log("deleteProduct is invoked.")
+        const id = document.getElementById('id')
+        fetch(`/product/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                // Include any additional data you need to send
+            })
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert('Resource deleted successfully');
+                    // Optionally, redirect the user to another page or perform further actions
+                } else {
+                    alert('Failed to delete the resource');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+</script>
+
+<ul>
+    <p> delete product</p>
+        <div>
+            <label for="id">Product Id:</label>
+            <input type="text" id="id" name="id" required>
+        </div>
+
+        <button type="submit" onclick="deleteProduct()">Delete Product</button>
+</ul>
+</body>
+</html>
