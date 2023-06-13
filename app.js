@@ -2,45 +2,38 @@ const express = require('express')
 const app = express();
 const session = require('express-session')
 require('./config/MongoDBConnection')
-require('./auth/auth')
-const productRouter = require('./router/ProductRouter')
-const passport = require('passport')
-const store = require('store')
-const {localStorage} = require('node-localstorage')
+const pgPool = require("./db/pgWrapper");
+const tokenDB = require("./db/tokenDB")(pgPool);
+const userDB = require("./db/userDB")(pgPool);
+const oAuthService = require("./auth/tokenService")(userDB, tokenDB);
+const OAuth2Server = require("node-oauth2-server");
 
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
-app.use('/product',isLoggedIn, productRouter)
-app.use(require('cookie-parser')());
-app.use(session({ secret: 'cats', resave: false, saveUninitialized: true }));
-app.use(passport.initialize());
-app.use(passport.session());
-app.set('view engine','ejs')
-app.set('views','./views')
 
-function isLoggedIn(req,res,next){
-    req.headers['cookie'] ? next(): res.sendStatus(401)
-}
+app.oauth = new OAuth2Server({
+    model: oAuthService,
+    grants: ["password"],
+    debug: true,
+    client_id: 'aditya',
+    requireClientAuthentication: {password: false}
+});
 
-app.get('/', (req, res) => {
-    const link = '<a href="/auth">Click here</a>';
-    res.send(
-       `Visit this page ${link}`
-    ).end()
-})
+const authenticator = require("./auth/authenticator")(userDB);
+const authRoutes = require("./router/AuthRouter")(express.Router(), app, authenticator);
+const productRoutes = require("./router/ProductRouter")(express.Router(),app);
 
-app.get('/fail',(req,res)=>{
-    res.send("Unauthenticated user")
-    res.end();
-})
+var allowJson = function(req, res, next) {
+    if (req.is('json'))
+        req.headers['content-type'] = 'application/x-www-form-urlencoded';
 
-app.get('/auth', passport.authenticate('google', {scope: ['email', 'profile']}))
+    next();
+};
+app.use('/oauth/token',allowJson,app.oauth.grant())
+app.use("/auth", authRoutes);
+app.use("/product",productRoutes)
 
-app.get('/google/auth/callback', passport.authenticate('google',{
-    successRedirect: '/product/',
-    failureRedirect: '/fail'
-}))
-app.listen(5000, () => {
-    console.log("server running on 5000")
+app.listen(8080, () => {
+    console.log("server running on 8080")
 })

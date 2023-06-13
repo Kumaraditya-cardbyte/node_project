@@ -5,7 +5,8 @@ const getAllProduct = (req, res) => {
     console.log("Fetching all the product")
     Product.find({})
         .then((data) => {
-            res.render('allProduct.ejs',{data})
+            res.json(data)
+            res.end()
 
         })
         .catch((error) => {
@@ -17,13 +18,6 @@ const getAllProduct = (req, res) => {
 
 }
 
-const deletePage = (req,res) =>{
-    res.render('deleteProduct')
-}
-
-const updatePage = (req,res) =>{
-    res.render('updateProduct')
-}
 
 const getProduct = (req, res) => {
     console.log("Fetching a particular product")
@@ -94,4 +88,4 @@ const createProduct = (req, res) => {
     res.end();
 }
 
-module.exports = {getAllProduct, getProduct, updateProduct, deleteProduct, createProduct,deletePage,updatePage}
+module.exports = {getAllProduct, getProduct, updateProduct, deleteProduct, createProduct}
