@@ -22,17 +22,11 @@ app.oauth = new OAuth2Server({
 
 const authenticator = require("./auth/authenticator")(userDB);
 const authRoutes = require("./router/AuthRouter")(express.Router(), app, authenticator);
-const productRoutes = require("./router/ProductRouter")(express.Router(),app);
+const UserRoute = require("./router/UserRouter")(express.Router(),app);
 
-var allowJson = function(req, res, next) {
-    if (req.is('json'))
-        req.headers['content-type'] = 'application/x-www-form-urlencoded';
 
-    next();
-};
-app.use('/oauth/token',allowJson,app.oauth.grant())
 app.use("/auth", authRoutes);
-app.use("/product",productRoutes)
+app.use("/user",UserRoute)
 
 app.listen(8080, () => {
     console.log("server running on 8080")

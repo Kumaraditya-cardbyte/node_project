@@ -1,24 +1,22 @@
 const {
-    deleteProduct
-    , getProduct, getAllProduct, updateProduct,
-    createProduct,
-} = require('../service/productService')
+    createUser,UpdateUser,getAllUser,deleteUser,getUser,updateUser,
+} = require('../service/UserService')
 
 module.exports = (router,app) =>{
     router.get('/', app.oauth.authorise(),(req, res) => {
-        getAllProduct(req, res)
+        getAllUser(req, res)
     })
     router.get('/:id', app.oauth.authorise(),(req, res) => {
-        getProduct(req, res)
+        getUser(req, res)
     })
     router.post('/', app.oauth.authorise(),(req, res) => {
-        createProduct(req, res)
+        createUser(req, res)
     })
     router.put('/:id',app.oauth.authorise(), (req, res) => {
-        updateProduct(req, res)
+        updateUser(req, res)
     })
     router.delete('/:id',app.oauth.authorise(), (req, res) => {
-        deleteProduct(req, res)
+        deleteUser(req, res)
     })
     return router;
 }
